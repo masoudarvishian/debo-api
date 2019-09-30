@@ -3,7 +3,6 @@ using DEBO.Core.Entity.Contact;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace DEBO.API.Controllers
@@ -27,6 +26,19 @@ namespace DEBO.API.Controllers
             return Ok(contacts);
         }
 
+        [HttpGet("{id}")]
+        public ActionResult<IEnumerable<ContactDto>> GetById(int id)
+        {
+            var contact = _contactService.GetById(id);
+
+            if (contact == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(contact);
+        }
+
         [HttpPost]
         public ActionResult Post(ContactDto contact)
         {
@@ -48,13 +60,17 @@ namespace DEBO.API.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
 
-            throw new NotImplementedException();
+            var updatedContact = _contactService.Update(contact);
+
+            return Ok(updatedContact);
         }
 
         [HttpDelete]
         public ActionResult Delete(int id)
         {
-            throw new NotImplementedException();
+            _contactService.Delete(id);
+
+            return NoContent();
         }
     }
 }

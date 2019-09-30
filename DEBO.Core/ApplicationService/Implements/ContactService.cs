@@ -28,11 +28,8 @@ namespace DEBO.Core.ApplicationService.Implements
                 ModifyDate = DateTime.Now
             };
 
-            using (_unitOfWork)
-            {
-                _unitOfWork.ContactRepository.Create(contact);
-                _unitOfWork.SaveChanges();
-            }
+            _unitOfWork.ContactRepository.Create(contact);
+            _unitOfWork.SaveChanges();
 
             return contact;
         }
@@ -40,84 +37,70 @@ namespace DEBO.Core.ApplicationService.Implements
         public IEnumerable<ContactDto> GetAll()
         {
             List<ContactDto> contactDtos = new List<ContactDto>();
-            using (_unitOfWork)
-            {
-                var allContacts = _unitOfWork.ContactRepository.FindAll();
 
-                var queryMap = from x in allContacts
-                               select new ContactDto
-                               {
-                                   Id = x.Id,
-                                   FirstName = x.FirstName,
-                                   LastName = x.LastName,
-                                   PhoneNumber = x.PhoneNumber
-                               };
+            var allContacts = _unitOfWork.ContactRepository.FindAll();
 
-                contactDtos = queryMap.ToList();
-            }
+            var mappedContatDtos = from x in allContacts
+                                   select new ContactDto
+                                   {
+                                       Id = x.Id,
+                                       FirstName = x.FirstName,
+                                       LastName = x.LastName,
+                                       PhoneNumber = x.PhoneNumber
+                                   };
+
+            contactDtos = mappedContatDtos.ToList();
+
             return contactDtos;
         }
 
         public Contact Update(ContactDto contactDto)
         {
-            Contact contact = null;
+            var foundContact = _unitOfWork.ContactRepository.FindByCondition(x => x.Id == contactDto.Id).SingleOrDefault();
 
-            using (_unitOfWork)
+            if (foundContact == null)
             {
-                var foundContact = _unitOfWork.ContactRepository.FindByCondition(x => x.Id == contactDto.Id).SingleOrDefault();
-
-                foundContact.FirstName = contactDto.FirstName;
-                foundContact.LastName = contactDto.LastName;
-                foundContact.PhoneNumber = contactDto.PhoneNumber;
-                foundContact.ModifyDate = DateTime.Now;
-
-                _unitOfWork.ContactRepository.Update(foundContact);
-                _unitOfWork.SaveChanges();
-
-                contact = foundContact;
+                return null;
             }
 
-            return contact;
+            foundContact.FirstName = contactDto.FirstName;
+            foundContact.LastName = contactDto.LastName;
+            foundContact.PhoneNumber = contactDto.PhoneNumber;
+            foundContact.ModifyDate = DateTime.Now;
+
+            _unitOfWork.ContactRepository.Update(foundContact);
+            _unitOfWork.SaveChanges();
+
+            return foundContact;
         }
 
         public ContactDto GetById(int id)
         {
+            var contact = _unitOfWork.ContactRepository.FindByCondition(x => x.Id == id).SingleOrDefault();
+
+            if (contact == null) return null;
+
             ContactDto contactDto = new ContactDto();
 
-            using(_unitOfWork)
-            {
-                var contact = _unitOfWork.ContactRepository.FindByCondition(x => x.Id == id).SingleOrDefault();
-
-                if (contact != null)
-                {
-                    contactDto.Id = contact.Id;
-                    contactDto.FirstName = contact.FirstName;
-                    contactDto.LastName = contactDto.LastName;
-                    contactDto.PhoneNumber = contactDto.PhoneNumber;
-                }
-                else
-                {
-                    contactDto = null;
-                }
-            }
+            contactDto.Id = contact.Id;
+            contactDto.FirstName = contact.FirstName;
+            contactDto.LastName = contactDto.LastName;
+            contactDto.PhoneNumber = contactDto.PhoneNumber;
 
             return contactDto;
         }
 
         public void Delete(int id)
         {
-            using (_unitOfWork)
-            {
-                var contact = _unitOfWork.ContactRepository.FindByCondition(x => x.Id == id).SingleOrDefault();
+            var contact = _unitOfWork.ContactRepository.FindByCondition(x => x.Id == id).SingleOrDefault();
 
-                if (contact != null)
-                {
-                    contact.IsDelete = true;
-                    contact.ModifyDate = DateTime.Now;
-                }
+            if (contact == null) throw new Exception("Contact not found!");
 
-                _unitOfWork.SaveChanges();
-            }
+            contact.IsDelete = true;
+            contact.ModifyDate = DateTime.Now;
+
+            _unitOfWork.ContactRepository.Update(contact);
+            _unitOfWork.SaveChanges();
         }
     }
 }

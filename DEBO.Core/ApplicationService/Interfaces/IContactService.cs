@@ -1,5 +1,4 @@
-﻿using DEBO.Core.Entity;
-using DEBO.Core.Entity.Contact;
+﻿using DEBO.Core.Entity.Contact;
 using System.Collections.Generic;
 
 namespace DEBO.Core.ApplicationService.Interfaces

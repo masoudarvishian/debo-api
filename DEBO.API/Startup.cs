@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 using System.Net;
 
 namespace DEBO.API
@@ -33,6 +34,18 @@ namespace DEBO.API
             );
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSwaggerGen(c => 
+            {
+                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
+                {
+                    Version = "v1",
+                    Title = "DEBO API",
+                    Description = "DEBO API"
+                });
+
+                c.IncludeXmlComments(GetXmlCommentsPath());
+            });
 
             services.AddCors();
 
@@ -79,6 +92,12 @@ namespace DEBO.API
 
             app.UseMvc();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c => 
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "DEBO API V1");
+            });
+
             //------------------------------------------------------------------
             // ef core migration
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
@@ -86,6 +105,12 @@ namespace DEBO.API
                 var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationContext>();
                 context.Database.Migrate();
             }
+        }
+
+        private string GetXmlCommentsPath()
+        {
+            var app = System.AppDomain.CurrentDomain.BaseDirectory;
+            return System.IO.Path.Combine(app, "DEBO.API.xml");
         }
     }
 }
