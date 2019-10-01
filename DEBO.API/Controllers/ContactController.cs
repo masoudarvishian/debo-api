@@ -1,9 +1,12 @@
 ﻿using DEBO.Core.ApplicationService.Interfaces;
+using DEBO.Core.CustomExceptions;
 using DEBO.Core.Entity.Contact;
+using DEBO.Core.Entity.Contact.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DEBO.API.Controllers
 {
@@ -19,58 +22,100 @@ namespace DEBO.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<ContactDto>> Get()
+        public ActionResult<IEnumerable<ContactOutputDto>> Get()
         {
-            var contacts = _contactService.GetAll();
+            try
+            {
+                var contacts = _contactService.GetAll();
 
-            return Ok(contacts);
+                return Ok(contacts);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpGet("{id}")]
-        public ActionResult<IEnumerable<ContactDto>> GetById(int id)
+        public ActionResult<ContactOutputDto> GetById(int id)
         {
-            var contact = _contactService.GetById(id);
+            try
+            {
+                var contact = _contactService.GetById(id);
 
-            if (contact == null)
+                return Ok(contact);
+            }
+            catch (EntityNotFoundException)
             {
                 return NotFound();
             }
-
-            return Ok(contact);
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpPost]
-        public ActionResult Post(ContactDto contact)
+        public async Task<ActionResult<Contact>> Post(ContactInsertDto contact)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return StatusCode(StatusCodes.Status400BadRequest);
+                if (!ModelState.IsValid)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest);
+                }
+
+                var createdContact = await _contactService.InsertAsync(contact);
+
+                return CreatedAtAction(nameof(Post), createdContact);
             }
-
-            var createdContact = _contactService.Insert(contact);
-
-            return CreatedAtAction(nameof(Post), createdContact);
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpPut]
-        public ActionResult Put(ContactDto contact)
+        public async Task<ActionResult<Contact>> Put(ContactUpdateDto contact)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return StatusCode(StatusCodes.Status400BadRequest);
+                if (!ModelState.IsValid)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest);
+                }
+
+                var updatedContact = await _contactService.UpdateAsync(contact);
+
+                return Ok(updatedContact);
             }
-
-            var updatedContact = _contactService.Update(contact);
-
-            return Ok(updatedContact);
+            catch (EntityNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpDelete]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            _contactService.Delete(id);
+            try
+            {
+                await _contactService.DeleteAsync(id);
 
-            return NoContent();
+                return NoContent();
+            }
+            catch (EntityNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
     }
 }

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DEBO.Core.Entity.Contact
+﻿namespace DEBO.Core.Entity.Contact.Dtos
 {
-    public class ContactDto
+    public class ContactUpdateDto
     {
         public int Id { get; set; }
         public string FirstName { get; set; }

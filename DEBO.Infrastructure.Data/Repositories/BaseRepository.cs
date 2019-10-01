@@ -15,29 +15,30 @@ namespace DEBO.Infrastructure.Data.Repositories
             _context = context;
         }
 
-        public IQueryable<TEntity> FindAll()
+        public virtual IQueryable<TEntity> FindAll()
         {
             return _context.Set<TEntity>().AsNoTracking();
         }
 
-        public void Create(TEntity entity)
+        public virtual void Create(TEntity entity)
         {
             _context.Set<TEntity>().Add(entity);
         }
 
-        public void Update(TEntity entity)
+        public virtual void Update(TEntity entity)
         {
             _context.Set<TEntity>().Update(entity);
         }
 
-        public IQueryable<TEntity> FindByCondition(Expression<Func<TEntity, bool>> expression)
+        public virtual IQueryable<TEntity> FindByCondition(Expression<Func<TEntity, bool>> expression)
         {
             return _context.Set<TEntity>().Where(expression)?.AsNoTracking();
         }
 
-        public void Delete(TEntity entity)
+        public virtual void Delete(TEntity entity)
         {
-            _context.Set<TEntity>().Remove(entity);
+            // _context.Set<TEntity>().Remove(entity);
+            throw new NotImplementedException();
         }
     }
 }
