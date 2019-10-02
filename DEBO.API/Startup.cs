@@ -1,4 +1,5 @@
-﻿using DEBO.API.Helpers;
+﻿using DEBO.API.Extensions;
+using DEBO.API.Models;
 using DEBO.Core.ApplicationService.Implements;
 using DEBO.Core.ApplicationService.Interfaces;
 using DEBO.Core.DomainService;
@@ -12,7 +13,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Swashbuckle.AspNetCore.Swagger;
 using System.Net;
 
 namespace DEBO.API
@@ -89,6 +89,8 @@ namespace DEBO.API
                .AllowAnyMethod()
                .AllowAnyHeader()
             );
+
+            app.ConfigureExceptionHandler();
 
             app.UseMvc();
 

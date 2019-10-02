@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace DEBO.API.Helpers
+namespace DEBO.API.Extensions
 {
-    public static class Extensions
+    public static class HttpResponseExtensions
     {
         public static void AddApplicationError(this HttpResponse response, string message)
         {
