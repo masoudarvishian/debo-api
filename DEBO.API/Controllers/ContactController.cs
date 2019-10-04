@@ -1,13 +1,15 @@
 ﻿using DEBO.Core.ApplicationService.Interfaces;
+using DEBO.Core.Entity.Constants;
 using DEBO.Core.Entity.Contact;
 using DEBO.Core.Entity.Contact.Dtos;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DEBO.API.Controllers
 {
+    [Authorize(Roles = Role.Admin)]
     [Route("api/[controller]")]
     [ApiController]
     public class ContactController : ControllerBase

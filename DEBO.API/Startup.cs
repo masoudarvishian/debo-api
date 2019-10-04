@@ -1,10 +1,10 @@
 ﻿using DEBO.API.Extensions;
-using DEBO.API.Models;
 using DEBO.Core.ApplicationService.Implements;
 using DEBO.Core.ApplicationService.Interfaces;
 using DEBO.Core.DomainService;
 using DEBO.Infrastructure.Data;
 using DEBO.Infrastructure.Data.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Swagger;
+using System.Collections.Generic;
 using System.Net;
 
 namespace DEBO.API
@@ -45,11 +48,42 @@ namespace DEBO.API
                 });
 
                 c.IncludeXmlComments(GetXmlCommentsPath());
+
+                var security = new Dictionary<string, IEnumerable<string>>
+                {
+                    {"Bearer", new string[] { }},
+                };
+
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+                c.AddSecurityRequirement(security);
             });
 
             services.AddCors();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+                options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            System.Text.Encoding.UTF8.GetBytes(
+                                Configuration.GetSection("AppSettings:Token").Value
+                            )
+                        ),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                }
+            );
             services.AddScoped<IContactService, ContactService>();
         }
 
@@ -91,7 +125,7 @@ namespace DEBO.API
             );
 
             app.ConfigureExceptionHandler();
-
+            app.UseAuthentication();
             app.UseMvc();
 
             app.UseSwagger();
