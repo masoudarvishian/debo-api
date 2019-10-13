@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using DEBO.API.Extensions;
+﻿using DEBO.API.Extensions;
 using DEBO.Core.ApplicationService.Implements;
 using DEBO.Core.ApplicationService.Interfaces;
 using DEBO.Core.DomainService;
@@ -18,6 +17,8 @@ using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Collections.Generic;
 using System.Net;
+using DEBO.Infrastructure.Libraries.AutoMapperLib.Profiles;
+using DEBO.Infrastructure.Libraries.AutoMapperLib;
 
 namespace DEBO.API
 {
@@ -39,13 +40,16 @@ namespace DEBO.API
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            #region AutoMapper Config
             var config = new AutoMapper.MapperConfiguration(conf => 
             {
-                conf.AddProfile(new DEBO.Core.Profiles.ContactProfile());
+                conf.AddProfile(new ContactProfile());
             });
             var mapper = config.CreateMapper();
             services.AddSingleton(mapper);
+            #endregion
 
+            #region Swagger Config
             services.AddSwaggerGen(c => 
             {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
@@ -71,11 +75,13 @@ namespace DEBO.API
                 });
                 c.AddSecurityRequirement(security);
             });
+            #endregion
 
             services.AddCors();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddSingleton<IDataMapper, DataMapper>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
                 options =>
                 {

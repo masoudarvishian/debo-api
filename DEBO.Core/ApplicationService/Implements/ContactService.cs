@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using DEBO.Core.ApplicationService.Interfaces;
 using DEBO.Core.CustomExceptions;
 using DEBO.Core.DomainService;
@@ -14,17 +13,17 @@ namespace DEBO.Core.ApplicationService.Implements
     public class ContactService : IContactService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        private readonly IDataMapper _dataMapper;
 
-        public ContactService(IUnitOfWork unitOfWork, IMapper mapper)
+        public ContactService(IUnitOfWork unitOfWork, IDataMapper mapper)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
+            _dataMapper = mapper;
         }
 
         public async Task<Contact> InsertAsync(ContactInsertDto contactDto)
         {
-            var contact = _mapper.Map<Contact>(contactDto);
+            var contact = _dataMapper.Map<Contact>(contactDto);
 
             _unitOfWork.ContactRepository.Create(contact);
             await _unitOfWork.SaveChangesAsync();
@@ -38,7 +37,7 @@ namespace DEBO.Core.ApplicationService.Implements
 
             var allContacts = _unitOfWork.ContactRepository.FindByCondition(x => !x.IsDelete);
 
-            var mappedContatDtos = _mapper.ProjectTo<ContactOutputDto>(allContacts);
+            var mappedContatDtos = _dataMapper.ProjectTo<ContactOutputDto>(allContacts);
 
             contactDtos = mappedContatDtos.ToList();
 
@@ -57,7 +56,7 @@ namespace DEBO.Core.ApplicationService.Implements
                 throw new EntityNotFoundException();
             }
 
-            foundContact = _mapper.Map<Contact>(contactDto);
+            foundContact = _dataMapper.Map<Contact>(contactDto);
             foundContact.ModifyDate = DateTime.Now;
 
             _unitOfWork.ContactRepository.Update(foundContact);
@@ -78,7 +77,7 @@ namespace DEBO.Core.ApplicationService.Implements
                 throw new EntityNotFoundException();
             }
 
-           return _mapper.Map<ContactOutputDto>(contact);
+           return _dataMapper.Map<ContactOutputDto>(contact);
         }
 
         public async Task DeleteAsync(int id)

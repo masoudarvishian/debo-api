@@ -25,6 +25,7 @@
     <ProjectReference Include="..\DEBO.Core.Entity\DEBO.Core.Entity.csproj" />
     <ProjectReference Include="..\DEBO.Core\DEBO.Core.csproj" />
     <ProjectReference Include="..\DEBO.Infrastructure.Data\DEBO.Infrastructure.Data.csproj" />
+    <ProjectReference Include="..\DEBO.Infrastructure.Libraries\DEBO.Infrastructure.Libraries.csproj" />
   </ItemGroup>
 
 </Project>
