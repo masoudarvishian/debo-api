@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using DEBO.Core.ApplicationService.Interfaces;
 using DEBO.Core.CustomExceptions;
 using DEBO.Core.DomainService;
@@ -13,22 +14,17 @@ namespace DEBO.Core.ApplicationService.Implements
     public class ContactService : IContactService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public ContactService(IUnitOfWork unitOfWork)
+        public ContactService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task<Contact> InsertAsync(ContactInsertDto contactDto)
         {
-            var contact = new Contact
-            {
-                FirstName = contactDto.FirstName,
-                LastName = contactDto.LastName,
-                PhoneNumber = contactDto.PhoneNumber,
-                CreateDate = DateTime.Now,
-                ModifyDate = DateTime.Now
-            };
+            var contact = _mapper.Map<Contact>(contactDto);
 
             _unitOfWork.ContactRepository.Create(contact);
             await _unitOfWork.SaveChangesAsync();
@@ -42,14 +38,7 @@ namespace DEBO.Core.ApplicationService.Implements
 
             var allContacts = _unitOfWork.ContactRepository.FindByCondition(x => !x.IsDelete);
 
-            var mappedContatDtos = from x in allContacts
-                                   select new ContactOutputDto
-                                   {
-                                       Id = x.Id,
-                                       FirstName = x.FirstName,
-                                       LastName = x.LastName,
-                                       PhoneNumber = x.PhoneNumber
-                                   };
+            var mappedContatDtos = _mapper.ProjectTo<ContactOutputDto>(allContacts);
 
             contactDtos = mappedContatDtos.ToList();
 
@@ -68,9 +57,7 @@ namespace DEBO.Core.ApplicationService.Implements
                 throw new EntityNotFoundException();
             }
 
-            foundContact.FirstName = contactDto.FirstName;
-            foundContact.LastName = contactDto.LastName;
-            foundContact.PhoneNumber = contactDto.PhoneNumber;
+            foundContact = _mapper.Map<Contact>(contactDto);
             foundContact.ModifyDate = DateTime.Now;
 
             _unitOfWork.ContactRepository.Update(foundContact);
@@ -91,14 +78,7 @@ namespace DEBO.Core.ApplicationService.Implements
                 throw new EntityNotFoundException();
             }
 
-            ContactOutputDto contactDto = new ContactOutputDto();
-
-            contactDto.Id = contact.Id;
-            contactDto.FirstName = contact.FirstName;
-            contactDto.LastName = contact.LastName;
-            contactDto.PhoneNumber = contact.PhoneNumber;
-
-            return contactDto;
+           return _mapper.Map<ContactOutputDto>(contact);
         }
 
         public async Task DeleteAsync(int id)

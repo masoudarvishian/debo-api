@@ -1,4 +1,5 @@
-﻿using DEBO.API.Extensions;
+﻿using AutoMapper;
+using DEBO.API.Extensions;
 using DEBO.Core.ApplicationService.Implements;
 using DEBO.Core.ApplicationService.Interfaces;
 using DEBO.Core.DomainService;
@@ -37,6 +38,13 @@ namespace DEBO.API
             );
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            var config = new AutoMapper.MapperConfiguration(conf => 
+            {
+                conf.AddProfile(new DEBO.Core.Profiles.ContactProfile());
+            });
+            var mapper = config.CreateMapper();
+            services.AddSingleton(mapper);
 
             services.AddSwaggerGen(c => 
             {
