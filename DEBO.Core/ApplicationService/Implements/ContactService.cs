@@ -21,72 +21,58 @@ namespace DEBO.Core.ApplicationService.Implements
             _dataMapper = mapper;
         }
 
-        public async Task<Contact> InsertAsync(ContactInsertDto contactDto)
+        public async Task<Contact> InsertAsync(ContactInsertDto entityInsertDto)
         {
-            var contact = _dataMapper.Map<Contact>(contactDto);
-
+            var contact = _dataMapper.Map<Contact>(entityInsertDto);
             _unitOfWork.ContactRepository.Create(contact);
             await _unitOfWork.SaveChangesAsync();
-
             return contact;
         }
 
         public IEnumerable<ContactOutputDto> GetAll()
         {
-            List<ContactOutputDto> contactDtos = new List<ContactOutputDto>();
-
-            var allContacts = _unitOfWork.ContactRepository.FindByCondition(x => !x.IsDelete);
-
-            var mappedContatDtos = _dataMapper.ProjectTo<ContactOutputDto>(allContacts);
-
-            contactDtos = mappedContatDtos.ToList();
-
-            return contactDtos;
+            var allContacts =
+                _unitOfWork.ContactRepository.FindByCondition(x => !x.IsDelete);
+            var contactOutputDtos =
+                _dataMapper.ProjectTo<ContactOutputDto>(allContacts);
+            return contactOutputDtos.ToList();
         }
 
-        public async Task<Contact> UpdateAsync(ContactUpdateDto contactDto)
+        public async Task<Contact> UpdateAsync(ContactUpdateDto entityUpdateDto)
         {
-            var foundContact = _unitOfWork
-                .ContactRepository
-                .FindByCondition(x => !x.IsDelete && x.Id == contactDto.Id)
+            var foundContact = _unitOfWork.ContactRepository
+                .FindByCondition(x => !x.IsDelete && x.Id == entityUpdateDto.Id)
                 .SingleOrDefault();
-
             if (foundContact == null)
             {
                 throw new EntityNotFoundException();
             }
 
-            foundContact = _dataMapper.Map<Contact>(contactDto);
+            foundContact = _dataMapper.Map<Contact>(entityUpdateDto);
             foundContact.ModifyDate = DateTime.Now;
-
             _unitOfWork.ContactRepository.Update(foundContact);
             await _unitOfWork.SaveChangesAsync();
-
             return foundContact;
         }
 
         public ContactOutputDto GetById(int id)
         {
-            var contact = _unitOfWork
-                .ContactRepository
+            var contact = _unitOfWork.ContactRepository
                 .FindByCondition(x => !x.IsDelete && x.Id == id)
                 .SingleOrDefault();
-
             if (contact == null)
             {
                 throw new EntityNotFoundException();
             }
 
-           return _dataMapper.Map<ContactOutputDto>(contact);
+            return _dataMapper.Map<ContactOutputDto>(contact);
         }
 
         public async Task DeleteAsync(int id)
         {
-            var contact = _unitOfWork
-                .ContactRepository
+            var contact = _unitOfWork.ContactRepository
                 .FindByCondition(x => !x.IsDelete && x.Id == id)
                 .SingleOrDefault();
-
             if (contact == null)
             {
                 throw new EntityNotFoundException();
@@ -94,7 +80,6 @@ namespace DEBO.Core.ApplicationService.Implements
 
             contact.IsDelete = true;
             contact.ModifyDate = DateTime.Now;
-
             _unitOfWork.ContactRepository.Update(contact);
             await _unitOfWork.SaveChangesAsync();
         }

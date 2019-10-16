@@ -35,46 +35,61 @@ namespace DEBO.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                options =>
+                    options.UseSqlServer(
+                        Configuration.GetConnectionString("DefaultConnection"))
             );
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             #region AutoMapper Config
-            var config = new AutoMapper.MapperConfiguration(conf => 
+
+            var config = new AutoMapper.MapperConfiguration(conf =>
             {
                 conf.AddProfile(new ContactProfile());
+                conf.AddProfile(new CategoryProfile());
             });
             var mapper = config.CreateMapper();
             services.AddSingleton(mapper);
+
             #endregion
 
             #region Swagger Config
-            services.AddSwaggerGen(c => 
+
+            services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
-                {
-                    Version = "v1",
-                    Title = "DEBO API",
-                    Description = "DEBO API"
-                });
+                c.SwaggerDoc("v1",
+                    new Swashbuckle.AspNetCore.Swagger.Info
+                    {
+                        Version = "v1",
+                        Title = "DEBO API",
+                        Description = "DEBO API"
+                    });
 
                 c.IncludeXmlComments(GetXmlCommentsPath());
 
                 var security = new Dictionary<string, IEnumerable<string>>
                 {
-                    {"Bearer", new string[] { }},
+                    {
+                        "Bearer", new string[]
+                        {
+                        }
+                    },
                 };
 
-                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
-                {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                    Name = "Authorization",
-                    In = "header",
-                    Type = "apiKey"
-                });
+                c.AddSecurityDefinition("Bearer",
+                    new ApiKeyScheme
+                    {
+                        Description =
+                            "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                        Name = "Authorization",
+                        In = "header",
+                        Type = "apiKey"
+                    });
                 c.AddSecurityRequirement(security);
             });
+
             #endregion
 
             services.AddCors();
@@ -82,27 +97,33 @@ namespace DEBO.API
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddSingleton<IDataMapper, DataMapper>();
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
-                options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(
+                    options =>
                     {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                            System.Text.Encoding.UTF8.GetBytes(
-                                Configuration.GetSection("AppSettings:Token").Value
-                            )
-                        ),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-                }
-            );
+                        options.TokenValidationParameters =
+                            new TokenValidationParameters
+                            {
+                                ValidateIssuerSigningKey = true,
+                                IssuerSigningKey = new SymmetricSecurityKey(
+                                    System.Text.Encoding.UTF8.GetBytes(
+                                        Configuration
+                                            .GetSection("AppSettings:Token")
+                                            .Value
+                                    )
+                                ),
+                                ValidateIssuer = false,
+                                ValidateAudience = false
+                            };
+                    }
+                );
             services.AddScoped<IContactService, ContactService>();
+            services.AddScoped<ICategoryService, CategoryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app,
+            IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -111,31 +132,36 @@ namespace DEBO.API
             else
             {
                 app.UseExceptionHandler(
-                   builder =>
-                   {
-                       builder.Run(
-                           async context =>
-                           {
-                               context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                               var error = context.Features.Get<IExceptionHandlerFeature>();
-                               if (error != null)
-                               {
-                                   context.Response.AddApplicationError(error.Error.Message);
-                                   await context.Response.WriteAsync(error.Error.Message);
-                               }
-                           }
-                       );
-                   }
-               );
+                    builder =>
+                    {
+                        builder.Run(
+                            async context =>
+                            {
+                                context.Response.StatusCode =
+                                    (int) HttpStatusCode.InternalServerError;
+                                var error =
+                                    context.Features
+                                        .Get<IExceptionHandlerFeature>();
+                                if (error != null)
+                                {
+                                    context.Response.AddApplicationError(
+                                        error.Error.Message);
+                                    await context.Response.WriteAsync(
+                                        error.Error.Message);
+                                }
+                            }
+                        );
+                    }
+                );
                 //app.UseHsts();
             }
 
             // app.UseHttpsRedirection();
 
             app.UseCors(x => x
-               .AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader()
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
             );
 
             app.ConfigureExceptionHandler();
@@ -143,16 +169,20 @@ namespace DEBO.API
             app.UseMvc();
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => 
+            app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "DEBO API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json",
+                    "DEBO API V1");
             });
 
             //------------------------------------------------------------------
             // ef core migration
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            using (var serviceScope = app.ApplicationServices
+                .GetService<IServiceScopeFactory>()
+                .CreateScope())
             {
-                var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationContext>();
+                var context = serviceScope.ServiceProvider
+                    .GetRequiredService<ApplicationContext>();
                 context.Database.Migrate();
             }
         }
@@ -160,7 +190,8 @@ namespace DEBO.API
         private string GetXmlCommentsPath()
         {
             var app = System.AppDomain.CurrentDomain.BaseDirectory;
-            return System.IO.Path.Combine(app, "DEBO.API.xml");
+            return System.IO.Path.Combine(app,
+                "DEBO.API.xml");
         }
     }
 }
