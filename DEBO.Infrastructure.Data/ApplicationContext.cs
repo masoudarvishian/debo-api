@@ -1,4 +1,5 @@
-﻿using DEBO.Core.Entity.Contact;
+﻿using DEBO.Core.Entity.Category;
+using DEBO.Core.Entity.Contact;
 using DEBO.Core.Entity.User;
 using DEBO.Infrastructure.Data.EntityConfigs;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace DEBO.Infrastructure.Data
 
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -19,6 +21,7 @@ namespace DEBO.Infrastructure.Data
 
             modelBuilder.ApplyConfiguration(new ContactConfig());
             modelBuilder.ApplyConfiguration(new UserConfig());
+            modelBuilder.ApplyConfiguration(new CategoryConfig());
         }
     }
 }
