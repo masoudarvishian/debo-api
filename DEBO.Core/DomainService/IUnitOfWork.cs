@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 
 namespace DEBO.Core.DomainService
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork<T> : IDisposable
     {
-        IContactRepository ContactRepository { get; }
-        ICategoryRepository CategoryRepository { get; }
+        IBaseRepository<T> BaseRepository { get; }
 
         int SaveChanges();
         Task<int> SaveChangesAsync();

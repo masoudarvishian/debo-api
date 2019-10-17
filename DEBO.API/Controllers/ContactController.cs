@@ -32,7 +32,7 @@ namespace DEBO.API.Controllers
         [HttpGet("{id}")]
         public ActionResult<ContactOutputDto> GetById(int id)
         {
-            var contact = _contactService.GetById(id);
+            var contact = _contactService.GetOne(x => x.Id == id);
 
             return Ok(contact);
         }

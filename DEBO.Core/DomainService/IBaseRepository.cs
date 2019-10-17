@@ -6,8 +6,12 @@ namespace DEBO.Core.DomainService
 {
     public interface IBaseRepository<TEntity>
     {
+        TEntity FindById(object id);
         IQueryable<TEntity> FindAll();
-        IQueryable<TEntity> FindByCondition(Expression<Func<TEntity, bool>> expression);
+
+        IQueryable<TEntity> FindByCondition(
+            Expression<Func<TEntity, bool>> expression);
+
         void Create(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);

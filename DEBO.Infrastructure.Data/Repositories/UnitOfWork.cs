@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 
 namespace DEBO.Infrastructure.Data.Repositories
 {
-    public sealed class UnitOfWork : IUnitOfWork
+    public sealed class UnitOfWork<T> : IUnitOfWork<T> where T : class
     {
-        private IContactRepository _contactRepository;
-        private ICategoryRepository _categoryRepository;
+        private IBaseRepository<T> _baseRepository;
 
         private readonly ApplicationContext _context;
 
@@ -15,13 +14,9 @@ namespace DEBO.Infrastructure.Data.Repositories
             _context = context;
         }
 
-        public IContactRepository ContactRepository =>
-            _contactRepository =
-                _contactRepository ?? new ContactRepository(_context);
-
-        public ICategoryRepository CategoryRepository =>
-            _categoryRepository =
-                _categoryRepository ?? new CategoryRepository(_context);
+        public IBaseRepository<T> BaseRepository =>
+            _baseRepository =
+                _baseRepository ?? new BaseRepository<T>(_context);
 
         public void Dispose()
         {

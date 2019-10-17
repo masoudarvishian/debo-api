@@ -1,4 +1,5 @@
-﻿using DEBO.API.Extensions;
+﻿using System;
+using DEBO.API.Extensions;
 using DEBO.Core.ApplicationService.Implements;
 using DEBO.Core.ApplicationService.Interfaces;
 using DEBO.Core.DomainService;
@@ -16,7 +17,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Reflection;
+using AutoMapper;
 using DEBO.Infrastructure.Libraries.AutoMapperLib.Profiles;
 using DEBO.Infrastructure.Libraries.AutoMapperLib;
 
@@ -47,8 +51,15 @@ namespace DEBO.API
 
             var config = new AutoMapper.MapperConfiguration(conf =>
             {
-                conf.AddProfile(new ContactProfile());
-                conf.AddProfile(new CategoryProfile());
+                var allProfiles =
+                    (from t in typeof(DataMapper).Assembly.GetTypes()
+                        where t.IsSubclassOf(typeof(Profile))
+                        select (Profile) Activator.CreateInstance(t)).ToList();
+
+                foreach (var profile in allProfiles)
+                {
+                    conf.AddProfile(profile);
+                }
             });
             var mapper = config.CreateMapper();
             services.AddSingleton(mapper);
@@ -94,7 +105,7 @@ namespace DEBO.API
 
             services.AddCors();
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            // services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddSingleton<IDataMapper, DataMapper>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -117,8 +128,9 @@ namespace DEBO.API
                             };
                     }
                 );
-            services.AddScoped<IContactService, ContactService>();
-            services.AddScoped<ICategoryService, CategoryService>();
+
+            // services.AddScoped<IContactService, ContactService>();
+            // services.AddScoped<ICategoryService, CategoryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

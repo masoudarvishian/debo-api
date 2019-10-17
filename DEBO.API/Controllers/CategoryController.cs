@@ -32,22 +32,27 @@ namespace DEBO.API.Controllers
         [HttpGet("id")]
         public ActionResult<CategoryOutputDto> GetById(int id)
         {
-            var categoryOutputDto = _categoryService.GetById(id);
+            var categoryOutputDto = _categoryService.GetOne(x => 
+                x.Id == id);
             return Ok(categoryOutputDto);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Category>> Post(CategoryInsertDto categoryInsertDto)
+        public async Task<ActionResult<Category>> Post(
+            CategoryInsertDto categoryInsertDto)
         {
-            var category = await _categoryService.InsertAsync(categoryInsertDto);
-            return CreatedAtAction(nameof(Post), category);
+            var category =
+                await _categoryService.InsertAsync(categoryInsertDto);
+            return CreatedAtAction(nameof(Post),
+                category);
         }
 
         [HttpPut]
         public async Task<ActionResult<Category>> Put(
             CategoryUpdateDto categoryUpdateDto)
         {
-            var category = await _categoryService.UpdateAsync(categoryUpdateDto);
+            var category =
+                await _categoryService.UpdateAsync(categoryUpdateDto);
             return Ok(category);
         }
 
