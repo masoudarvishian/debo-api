@@ -6,7 +6,6 @@ namespace DEBO.Core.DomainService
 {
     public interface IBaseRepository<TEntity>
     {
-        TEntity FindById(object id);
         IQueryable<TEntity> FindAll();
 
         IQueryable<TEntity> FindByCondition(

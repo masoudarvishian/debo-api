@@ -16,11 +16,6 @@ namespace DEBO.Infrastructure.Data.Repositories
             _context = context;
         }
 
-        public virtual TEntity FindById(object id)
-        {
-            return _context.Set<TEntity>().Find(id);
-        }
-
         public virtual IQueryable<TEntity> FindAll()
         {
             return _context.Set<TEntity>()

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DEBO.Core.Entity.Category;
+﻿using DEBO.Core.Entity.Category;
 using DEBO.Core.Entity.Category.Dtos;
 
 namespace DEBO.Infrastructure.Libraries.AutoMapperLib.Profiles

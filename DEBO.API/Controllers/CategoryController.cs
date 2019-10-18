@@ -32,8 +32,7 @@ namespace DEBO.API.Controllers
         [HttpGet("id")]
         public ActionResult<CategoryOutputDto> GetById(int id)
         {
-            var categoryOutputDto = _categoryService.GetOne(x => 
-                x.Id == id);
+            var categoryOutputDto = _categoryService.GetOne(id);
             return Ok(categoryOutputDto);
         }
 

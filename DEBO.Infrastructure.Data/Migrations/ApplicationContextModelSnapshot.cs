@@ -39,32 +39,6 @@ namespace DEBO.Infrastructure.Data.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("DEBO.Core.Entity.Contact.Contact", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreateDate");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired();
-
-                    b.Property<bool>("IsDelete");
-
-                    b.Property<string>("LastName")
-                        .IsRequired();
-
-                    b.Property<DateTime>("ModifyDate");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Contacts");
-                });
-
             modelBuilder.Entity("DEBO.Core.Entity.User.User", b =>
                 {
                     b.Property<int>("Id")

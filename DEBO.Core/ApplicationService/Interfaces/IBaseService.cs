@@ -1,8 +1,7 @@
-﻿using System;
+﻿using DEBO.Core.Entity;
+using DEBO.Core.Entity.BaseDtos;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
-using DEBO.Core.Entity;
 
 namespace DEBO.Core.ApplicationService.Interfaces
 {
@@ -10,13 +9,12 @@ namespace DEBO.Core.ApplicationService.Interfaces
         where T : BaseEntity<TKey>
         where TInputDto : class
         where TOutputDto : class
-        where TUpdateDto : class
+        where TUpdateDto : UpdateDto<TKey>
     {
         IEnumerable<TOutputDto> GetAll();
-        IEnumerable<TOutputDto> GetAll(Expression<Func<T, bool>> expression);
-        TOutputDto GetOne(Expression<Func<T, bool>> expression);
+        TOutputDto GetOne(TKey id);
         Task<T> InsertAsync(TInputDto entityInsertDto);
-        Task<T> UpdateAsync(TKey id, TUpdateDto entityUpdateDto);
+        Task<T> UpdateAsync(TUpdateDto entityUpdateDto);
         Task DeleteAsync(TKey id);
     }
 }
