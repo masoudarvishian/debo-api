@@ -10,12 +10,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DEBO.Core.Entity\DEBO.Core.Entity.csproj" />
-    <ProjectReference Include="..\DEBO.Core\DEBO.Core.csproj" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
+    <ProjectReference Include="..\..\Application Core\DEBO.Core.Entity\DEBO.Core.Entity.csproj" />
+    <ProjectReference Include="..\..\Application Core\DEBO.Core\DEBO.Core.csproj" />
   </ItemGroup>
 
 </Project>
