@@ -105,10 +105,19 @@ namespace DEBO.API
 
             services.AddCors();
 
+            services.AddSingleton<IDataMapper, DataMapper>();
+
+            services.AddScoped(typeof(IGenericRepository<>),
+                typeof(GenericRepository<>));
+            services.AddScoped(typeof(IBaseService<,,,,>),
+                typeof(BaseService<,,,,>));
             services.AddScoped(typeof(IUnitOfWork<>),
                 typeof(UnitOfWork<>));
+
             services.AddScoped<IAuthRepository, AuthRepository>();
-            services.AddSingleton<IDataMapper, DataMapper>();
+
+            services.AddScoped<ICategoryService, CategoryService>();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(
                     options =>
@@ -130,7 +139,8 @@ namespace DEBO.API
                     }
                 );
 
-            services.AddScoped<ICategoryService, CategoryService>();
+            
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

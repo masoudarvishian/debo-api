@@ -1,67 +1,28 @@
-﻿using DEBO.Core.ApplicationService.Interfaces;
+﻿using DEBO.API.Models;
+using DEBO.Core.ApplicationService.Interfaces;
 using DEBO.Core.Entity.Category;
 using DEBO.Core.Entity.Category.Dtos;
 using DEBO.Core.Entity.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace DEBO.API.Controllers
 {
     [Authorize(Roles = Role.Admin)]
-    [Route("api/[controller]")]
+    [Route(ApiConstans.BaseRoute)]
     [ApiController]
-    public class CategoryController : ControllerBase
+    public class CategoryController : BaseRestApiController<Category, int,
+        CategoryInputDto, CategoryOutputDto, CategoryUpdateDto>
     {
         private readonly ICategoryService _categoryService;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(
+            IBaseService<Category, int,
+                    CategoryInputDto, CategoryOutputDto, CategoryUpdateDto>
+                baseService,
+            ICategoryService categoryService) : base(baseService)
         {
             _categoryService = categoryService;
-        }
-
-        [HttpGet]
-        public ActionResult<IEnumerable<CategoryOutputDto>> Get()
-        {
-            var categoryOutputDtos = _categoryService.GetAll();
-
-            return Ok(categoryOutputDtos);
-        }
-
-        [HttpGet("id")]
-        public ActionResult<CategoryOutputDto> GetById(int id)
-        {
-            var categoryOutputDto = _categoryService.GetOne(id);
-            return Ok(categoryOutputDto);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<Category>> Post(
-            CategoryInputDto categoryInsertDto)
-        {
-            var category =
-                await _categoryService.InsertAsync(categoryInsertDto);
-            return CreatedAtAction(nameof(Post),
-                category);
-        }
-
-        [HttpPut]
-        public async Task<ActionResult<Category>> Put(
-            CategoryUpdateDto categoryUpdateDto)
-        {
-            var category =
-                await _categoryService.UpdateAsync(categoryUpdateDto.Id,
-                    categoryUpdateDto);
-            return Ok(category);
-        }
-
-        [HttpDelete]
-        public async Task<ActionResult<object>> Delete(int id)
-        {
-            await _categoryService.DeleteAsync(id);
-
-            return NoContent();
         }
     }
 }

@@ -6,12 +6,12 @@ using System.Linq.Expressions;
 
 namespace DEBO.Infrastructure.Data.Repositories
 {
-    public class BaseRepository<TEntity> : IBaseRepository<TEntity>
+    public class GenericRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class
     {
         private readonly ApplicationContext _context;
 
-        public BaseRepository(ApplicationContext context)
+        public GenericRepository(ApplicationContext context)
         {
             _context = context;
         }

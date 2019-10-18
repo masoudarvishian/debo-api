@@ -5,7 +5,7 @@ namespace DEBO.Infrastructure.Data.Repositories
 {
     public sealed class UnitOfWork<T> : IUnitOfWork<T> where T : class
     {
-        private IBaseRepository<T> _baseRepository;
+        private IGenericRepository<T> _repository;
 
         private readonly ApplicationContext _context;
 
@@ -14,9 +14,9 @@ namespace DEBO.Infrastructure.Data.Repositories
             _context = context;
         }
 
-        public IBaseRepository<T> BaseRepository =>
-            _baseRepository =
-                _baseRepository ?? new BaseRepository<T>(_context);
+        public IGenericRepository<T> Repository =>
+            _repository =
+                _repository ?? new GenericRepository<T>(_context);
 
         public void Dispose()
         {

@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace DEBO.Core.DomainService
 {
-    public interface IBaseRepository<TEntity>
+    public interface IGenericRepository<TEntity>
     {
         IQueryable<TEntity> FindAll();
 

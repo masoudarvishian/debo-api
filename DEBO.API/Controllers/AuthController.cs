@@ -11,11 +11,12 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using DEBO.API.Models;
 
 namespace DEBO.API.Controllers
 {
     [AllowAnonymous]
-    [Route("api/[controller]")]
+    [Route(ApiConstans.BaseRoute)]
     [ApiController]
     public class AuthController : ControllerBase
     {

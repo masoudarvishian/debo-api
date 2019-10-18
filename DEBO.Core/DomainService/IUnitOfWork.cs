@@ -5,7 +5,7 @@ namespace DEBO.Core.DomainService
 {
     public interface IUnitOfWork<T> : IDisposable
     {
-        IBaseRepository<T> BaseRepository { get; }
+        IGenericRepository<T> Repository { get; }
 
         int SaveChanges();
         Task<int> SaveChangesAsync();
