@@ -5,8 +5,8 @@ namespace DEBO.Core.Entity
     /// <summary>
     /// Base entity for all entities across the project
     /// </summary>
-    /// <typeparam name="T">Type of Id</typeparam>
-    public class BaseEntity<T>
+    /// <typeparam name="TKey">Type of Id</typeparam>
+    public class BaseEntity<TKey> : IEntity
     {
         public BaseEntity()
         {
@@ -14,7 +14,7 @@ namespace DEBO.Core.Entity
             ModifyDate = DateTime.Now;
         }
 
-        public T Id { get; set; }
+        public TKey Id { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime ModifyDate { get; set; }
         public bool IsDelete { get; set; }
