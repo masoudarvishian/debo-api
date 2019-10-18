@@ -60,7 +60,7 @@ namespace DEBO.API.Controllers
         #region Post
 
         [HttpPost]
-        public async Task<ActionResult<T>> Post(
+        public virtual async Task<ActionResult<T>> Post(
             TInputDto entityInsertDto)
         {
             var entity =
@@ -74,7 +74,7 @@ namespace DEBO.API.Controllers
         #region Put
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<T>> Put(
+        public virtual async Task<ActionResult<T>> Put(
             TKey id, TUpdateDto entityUpdateDto)
         {
             var category =
@@ -88,7 +88,7 @@ namespace DEBO.API.Controllers
         #region Delete
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<object>> Delete(TKey id)
+        public virtual async Task<ActionResult<object>> Delete(TKey id)
         {
             await _baseService.DeleteAsync(id);
 
