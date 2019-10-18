@@ -51,7 +51,8 @@ namespace DEBO.API.Controllers
             CategoryUpdateDto categoryUpdateDto)
         {
             var category =
-                await _categoryService.UpdateAsync(categoryUpdateDto);
+                await _categoryService.UpdateAsync(categoryUpdateDto.Id,
+                    categoryUpdateDto);
             return Ok(category);
         }
 

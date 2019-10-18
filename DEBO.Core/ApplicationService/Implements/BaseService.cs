@@ -2,7 +2,6 @@
 using DEBO.Core.CustomExceptions;
 using DEBO.Core.DomainService;
 using DEBO.Core.Entity;
-using DEBO.Core.Entity.BaseDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +14,7 @@ namespace DEBO.Core.ApplicationService.Implements
         where T : BaseEntity<TKey>
         where TInputDto : class
         where TOutputDto : class
-        where TUpdateDto : UpdateDto<TKey>
+        where TUpdateDto : class
     {
         private readonly IUnitOfWork<T> _unitOfWork;
         private readonly IDataMapper _dataMapper;
@@ -41,8 +40,8 @@ namespace DEBO.Core.ApplicationService.Implements
         {
             var entity =
                 _unitOfWork.BaseRepository
-                    .FindByCondition(x => 
-                        !x.IsDelete && 
+                    .FindByCondition(x =>
+                        !x.IsDelete &&
                         x.Id.Equals(id))
                     .SingleOrDefault();
 
@@ -62,13 +61,13 @@ namespace DEBO.Core.ApplicationService.Implements
             return entity;
         }
 
-        public virtual async Task<T> UpdateAsync(TUpdateDto entityUpdateDto)
+        public virtual async Task<T> UpdateAsync(TKey id, TUpdateDto entityUpdateDto)
         {
             var foundEntity =
                 _unitOfWork.BaseRepository
                     .FindByCondition(x =>
                         !x.IsDelete &&
-                        x.Id.Equals(entityUpdateDto.Id))
+                        x.Id.Equals(id))
                     .SingleOrDefault();
 
             if (foundEntity == null)

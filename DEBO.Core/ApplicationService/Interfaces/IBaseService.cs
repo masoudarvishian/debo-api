@@ -1,5 +1,4 @@
 ﻿using DEBO.Core.Entity;
-using DEBO.Core.Entity.BaseDtos;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,12 +8,12 @@ namespace DEBO.Core.ApplicationService.Interfaces
         where T : BaseEntity<TKey>
         where TInputDto : class
         where TOutputDto : class
-        where TUpdateDto : UpdateDto<TKey>
+        where TUpdateDto : class
     {
         IEnumerable<TOutputDto> GetAll();
         TOutputDto GetOne(TKey id);
         Task<T> InsertAsync(TInputDto entityInsertDto);
-        Task<T> UpdateAsync(TUpdateDto entityUpdateDto);
+        Task<T> UpdateAsync(TKey id, TUpdateDto entityUpdateDto);
         Task DeleteAsync(TKey id);
     }
 }
