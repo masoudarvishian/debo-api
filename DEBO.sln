@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DEBO.API", "UI\DEBO.API\DEBO.API.csproj", "{5AF0F3E5-560A-4EAC-9C01-4B2080974B3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DEBO.API", "src\UI\DEBO.API\DEBO.API.csproj", "{5AF0F3E5-560A-4EAC-9C01-4B2080974B3C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application Core", "Application Core", "{F0F9E637-A910-4D33-BB73-617BABCF6377}"
 EndProject
@@ -11,13 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{28CAB045-CAEE-4429-A4D5-7EC224613559}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DEBO.Infrastructure.Data", "Infrastructure\DEBO.Infrastructure.Data\DEBO.Infrastructure.Data.csproj", "{5E61BAB2-82DE-4527-9556-F47705BF4FB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DEBO.Infrastructure.Data", "src\Infrastructure\DEBO.Infrastructure.Data\DEBO.Infrastructure.Data.csproj", "{5E61BAB2-82DE-4527-9556-F47705BF4FB7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DEBO.Infrastructure.Libraries", "Infrastructure\DEBO.Infrastructure.Libraries\DEBO.Infrastructure.Libraries.csproj", "{C99562CA-6878-4D1A-9A8D-8EC6DB1C8C7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DEBO.Infrastructure.Libraries", "src\Infrastructure\DEBO.Infrastructure.Libraries\DEBO.Infrastructure.Libraries.csproj", "{C99562CA-6878-4D1A-9A8D-8EC6DB1C8C7E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DEBO.Core", "Application Core\DEBO.Core\DEBO.Core.csproj", "{2152E58E-8998-4D64-9077-A50176FD148B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DEBO.Core", "src\Application Core\DEBO.Core\DEBO.Core.csproj", "{2152E58E-8998-4D64-9077-A50176FD148B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DEBO.Core.Entity", "Application Core\DEBO.Core.Entity\DEBO.Core.Entity.csproj", "{D28A00E5-C539-47CF-B718-6A2B91F698A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DEBO.Core.Entity", "src\Application Core\DEBO.Core.Entity\DEBO.Core.Entity.csproj", "{D28A00E5-C539-47CF-B718-6A2B91F698A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
