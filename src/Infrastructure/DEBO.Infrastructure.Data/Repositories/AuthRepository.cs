@@ -17,7 +17,7 @@ namespace DEBO.Infrastructure.Data.Repositories
 
         public async Task<User> Login(string username, string password)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == username);
+            var user = await _context.Set<User>().FirstOrDefaultAsync(x => x.Username == username);
             if (user == null) return null;
 
             if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt)) return null;
@@ -49,7 +49,7 @@ namespace DEBO.Infrastructure.Data.Repositories
             user.CreateDate = DateTime.Now;
             user.ModifyDate = DateTime.Now;
 
-            await _context.Users.AddAsync(user);
+            await _context.Set<User>().AddAsync(user);
             await _context.SaveChangesAsync();
 
             return user;
@@ -65,6 +65,6 @@ namespace DEBO.Infrastructure.Data.Repositories
         }
 
         public async Task<bool> UserExists(string username) =>
-            await _context.Users.AnyAsync(x => x.Username == username);
+            await _context.Set<User>().AnyAsync(x => x.Username == username);
     }
 }

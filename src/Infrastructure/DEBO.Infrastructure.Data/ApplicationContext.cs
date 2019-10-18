@@ -14,8 +14,6 @@ namespace DEBO.Infrastructure.Data
         {
         }
 
-        public DbSet<User> Users { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
