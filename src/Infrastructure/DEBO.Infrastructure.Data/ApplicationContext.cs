@@ -1,5 +1,4 @@
 ﻿using DEBO.Core.Entity;
-using DEBO.Core.Entity.User;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
