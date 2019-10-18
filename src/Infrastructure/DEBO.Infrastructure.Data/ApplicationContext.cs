@@ -1,7 +1,7 @@
 ﻿using DEBO.Core.Entity.Category;
 using DEBO.Core.Entity.User;
-using DEBO.Infrastructure.Data.EntityConfigs;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace DEBO.Infrastructure.Data
 {
@@ -17,8 +17,9 @@ namespace DEBO.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.ApplyConfiguration(new UserConfig());
-            modelBuilder.ApplyConfiguration(new CategoryConfig());
+            // Apply all configurations
+            Assembly assemblyWithConfigurations = GetType().Assembly; 
+            modelBuilder.ApplyConfigurationsFromAssembly(assemblyWithConfigurations);
         }
     }
 }
