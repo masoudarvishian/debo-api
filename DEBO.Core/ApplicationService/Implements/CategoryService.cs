@@ -6,7 +6,7 @@ using DEBO.Core.Entity.Category.Dtos;
 namespace DEBO.Core.ApplicationService.Implements
 {
     public class CategoryService :
-        BaseService<Category, int, CategoryInsertDto, CategoryOutputDto,
+        BaseService<Category, int, CategoryInputDto, CategoryOutputDto,
             CategoryUpdateDto>, ICategoryService
     {
         private readonly IUnitOfWork<Category> _unitOfWork;

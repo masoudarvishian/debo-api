@@ -9,7 +9,7 @@ namespace DEBO.Infrastructure.Libraries.AutoMapperLib.Profiles
         {
             CreateMap<Category, CategoryOutputDto>();
             CreateMap<CategoryUpdateDto, Category>();
-            CreateMap<CategoryInsertDto, Category>();
+            CreateMap<CategoryInputDto, Category>();
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace DEBO.Core.Entity.Category.Dtos
 {
-    public class CategoryInsertDto
+    public class CategoryInputDto
     {
         [Required(ErrorMessage = "وارد کردن {0} اجباری است")]
         [Display(Name = "عنوان")]

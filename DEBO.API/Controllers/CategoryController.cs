@@ -38,7 +38,7 @@ namespace DEBO.API.Controllers
 
         [HttpPost]
         public async Task<ActionResult<Category>> Post(
-            CategoryInsertDto categoryInsertDto)
+            CategoryInputDto categoryInsertDto)
         {
             var category =
                 await _categoryService.InsertAsync(categoryInsertDto);
