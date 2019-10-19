@@ -1,10 +1,10 @@
-﻿using System;
+﻿using AutoMapper;
 using DEBO.API.Extensions;
-using DEBO.Core.ApplicationService.Implements;
 using DEBO.Core.ApplicationService.Interfaces;
 using DEBO.Core.DomainService;
 using DEBO.Infrastructure.Data;
 using DEBO.Infrastructure.Data.Repositories;
+using DEBO.Infrastructure.Libraries.AutoMapperLib;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -16,13 +16,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Reflection;
-using AutoMapper;
-using DEBO.Infrastructure.Libraries.AutoMapperLib.Profiles;
-using DEBO.Infrastructure.Libraries.AutoMapperLib;
 
 namespace DEBO.API
 {
@@ -105,18 +102,27 @@ namespace DEBO.API
 
             services.AddCors();
 
-            services.AddSingleton<IDataMapper, DataMapper>();
+            #region Dependency Injection Config
 
+            services.AddSingleton<IDataMapper, DataMapper>();
             services.AddScoped(typeof(IGenericRepository<>),
                 typeof(GenericRepository<>));
-            services.AddScoped(typeof(IBaseService<,,,,>),
-                typeof(BaseService<,,,,>));
             services.AddScoped(typeof(IUnitOfWork<>),
                 typeof(UnitOfWork<>));
-
             services.AddScoped<IAuthRepository, AuthRepository>();
 
-            services.AddScoped<ICategoryService, CategoryService>();
+            var serviceNamespace = $"{nameof(DEBO)}." +
+                                   $"{nameof(DEBO.Core)}." +
+                                   $"{nameof(DEBO.Core.ApplicationService)}." +
+                                   $"{nameof(DEBO.Core.ApplicationService.Implements)}";
+
+            services.Scan(scan => scan
+                .FromAssembliesOf(typeof(IBaseService<,,,,>))
+                .AddClasses(classes => classes.InNamespaces(serviceNamespace))
+                .AsImplementedInterfaces()
+                .WithScopedLifetime());
+
+            #endregion
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(
@@ -139,8 +145,8 @@ namespace DEBO.API
                     }
                 );
 
-            
-            
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
