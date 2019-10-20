@@ -1,9 +1,9 @@
-﻿namespace DEBO.Core.Entity.Category
+﻿namespace DEBO.Core.Entity.CategoryGroup
 {
     using System.Collections.Generic;
     using CategoryGroupCategory;
 
-    public class Category : BaseEntity<int>
+    public class CategoryGroup : BaseEntity<int>
     {
         public string Title { get; set; }
 
