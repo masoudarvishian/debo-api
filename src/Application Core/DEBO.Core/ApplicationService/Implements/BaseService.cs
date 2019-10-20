@@ -74,6 +74,7 @@ namespace DEBO.Core.ApplicationService.Implements
                 throw new EntityNotFoundException();
 
             foundEntity = _dataMapper.Map<T>(entityUpdateDto);
+            foundEntity.Id = id;
             foundEntity.ModifyDate = DateTime.Now;
 
             _unitOfWork.Repository.Update(foundEntity);
