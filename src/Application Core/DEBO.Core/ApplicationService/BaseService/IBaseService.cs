@@ -1,8 +1,8 @@
-﻿using DEBO.Core.Entity;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using DEBO.Core.Entity;
 
-namespace DEBO.Core.ApplicationService.Interfaces
+namespace DEBO.Core.ApplicationService.BaseService
 {
     public interface IBaseService<T, TKey, TInputDto, TOutputDto, TUpdateDto>
         where T : BaseEntity<TKey>

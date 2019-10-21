@@ -1,18 +1,17 @@
-﻿using DEBO.Core.ApplicationService.Interfaces;
+﻿using DEBO.Core.ApplicationService.BaseService;
 using DEBO.Core.DomainService;
-using DEBO.Core.Entity.Category;
 using DEBO.Core.Entity.Category.Dtos;
 
-namespace DEBO.Core.ApplicationService.Implements
+namespace DEBO.Core.ApplicationService.Category
 {
     public class CategoryService :
-        BaseService<Category, int, CategoryInputDto, CategoryOutputDto,
+        BaseService<Entity.Category.Category, int, CategoryInputDto, CategoryOutputDto,
             CategoryUpdateDto>, ICategoryService
     {
-        private readonly IUnitOfWork<Category> _unitOfWork;
+        private readonly IUnitOfWork<Entity.Category.Category> _unitOfWork;
         private readonly IDataMapper _dataMapper;
 
-        public CategoryService(IUnitOfWork<Category> unitOfWork,
+        public CategoryService(IUnitOfWork<Entity.Category.Category> unitOfWork,
             IDataMapper dataMapper) : base(unitOfWork, dataMapper)
         {
             _unitOfWork = unitOfWork;

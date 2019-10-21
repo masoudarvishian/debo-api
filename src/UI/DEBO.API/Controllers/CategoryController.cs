@@ -1,5 +1,6 @@
 ﻿using DEBO.API.Models;
-using DEBO.Core.ApplicationService.Interfaces;
+using DEBO.Core.ApplicationService.BaseService;
+using DEBO.Core.ApplicationService.Category;
 using DEBO.Core.Entity.Category;
 using DEBO.Core.Entity.Category.Dtos;
 using DEBO.Core.Entity.Constants;

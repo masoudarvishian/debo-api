@@ -1,11 +1,11 @@
 ﻿using DEBO.API.Models;
-using DEBO.Core.ApplicationService.Interfaces;
 using DEBO.Core.Entity;
 using DEBO.Core.Entity.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DEBO.Core.ApplicationService.BaseService;
 
 namespace DEBO.API.Controllers
 {

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using DEBO.API.Extensions;
-using DEBO.Core.ApplicationService.Interfaces;
 using DEBO.Core.DomainService;
 using DEBO.Infrastructure.Data;
 using DEBO.Infrastructure.Data.Repositories;
@@ -20,6 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using DEBO.Core.ApplicationService.BaseService;
+using DEBO.Core.ApplicationService.Category.Validators;
+using FluentValidation.AspNetCore;
 
 namespace DEBO.API
 {
@@ -42,6 +44,13 @@ namespace DEBO.API
             );
 
             services.AddMvc()
+                .AddFluentValidation(fv =>
+                {
+                    fv.RegisterValidatorsFromAssemblyContaining<CategoryInputDtoValidator>();
+                    fv.RunDefaultMvcValidationAfterFluentValidationExecutes =
+                        false;
+                    fv.ImplicitlyValidateChildProperties = true;
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             #region AutoMapper Config
@@ -111,14 +120,9 @@ namespace DEBO.API
                 typeof(UnitOfWork<>));
             services.AddScoped<IAuthRepository, AuthRepository>();
 
-            var serviceNamespace = $"{nameof(DEBO)}." +
-                                   $"{nameof(DEBO.Core)}." +
-                                   $"{nameof(DEBO.Core.ApplicationService)}." +
-                                   $"{nameof(DEBO.Core.ApplicationService.Implements)}";
-
             services.Scan(scan => scan
                 .FromAssembliesOf(typeof(IBaseService<,,,,>))
-                .AddClasses(classes => classes.InNamespaces(serviceNamespace))
+                .AddClasses(classes => classes.Where(c => c.Name.EndsWith("Service")))
                 .AsImplementedInterfaces()
                 .WithScopedLifetime());
 

@@ -1,13 +1,12 @@
-﻿using DEBO.Core.ApplicationService.Interfaces;
-using DEBO.Core.CustomExceptions;
-using DEBO.Core.DomainService;
-using DEBO.Core.Entity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DEBO.Core.CustomExceptions;
+using DEBO.Core.DomainService;
+using DEBO.Core.Entity;
 
-namespace DEBO.Core.ApplicationService.Implements
+namespace DEBO.Core.ApplicationService.BaseService
 {
     public class BaseService<T, TKey, TInputDto, TOutputDto, TUpdateDto> :
         IBaseService<T, TKey, TInputDto, TOutputDto, TUpdateDto>
