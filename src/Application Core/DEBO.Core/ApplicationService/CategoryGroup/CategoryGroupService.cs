@@ -1,4 +1,5 @@
-﻿using DEBO.Core.ApplicationService.BaseService;
+﻿using AutoMapper;
+using DEBO.Core.ApplicationService.BaseService;
 using DEBO.Core.DomainService;
 using DEBO.Core.Entity.CategoryGroup.Dtos;
 
@@ -10,8 +11,8 @@ namespace DEBO.Core.ApplicationService.CategoryGroup
         ICategoryGroupService
     {
         public CategoryGroupService(IUnitOfWork<Entity.CategoryGroup.CategoryGroup> unitOfWork,
-            IDataMapper dataMapper) : base(unitOfWork,
-            dataMapper)
+            IMapper mapper) : base(unitOfWork,
+            mapper)
         {
         }
     }

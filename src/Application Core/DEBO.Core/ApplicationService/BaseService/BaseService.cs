@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using DEBO.Core.CustomExceptions;
 using DEBO.Core.DomainService;
 using DEBO.Core.Entity;
@@ -16,13 +17,13 @@ namespace DEBO.Core.ApplicationService.BaseService
         where TUpdateDto : class
     {
         private readonly IUnitOfWork<T> _unitOfWork;
-        private readonly IDataMapper _dataMapper;
+        private readonly IMapper _mapper;
 
         public BaseService(IUnitOfWork<T> unitOfWork,
-            IDataMapper dataMapper)
+            IMapper dataMapper)
         {
             _unitOfWork = unitOfWork;
-            _dataMapper = dataMapper;
+            _mapper = dataMapper;
         }
 
         public IEnumerable<TOutputDto> GetAll()
@@ -32,7 +33,7 @@ namespace DEBO.Core.ApplicationService.BaseService
                     .Where(x => !x.IsDelete);
 
             return
-                _dataMapper.ProjectTo<TOutputDto>(allEntities);
+                _mapper.ProjectTo<TOutputDto>(allEntities);
         }
 
         public virtual TOutputDto GetOne(TKey id)
@@ -49,12 +50,12 @@ namespace DEBO.Core.ApplicationService.BaseService
                 throw new EntityNotFoundException();
             }
 
-            return _dataMapper.Map<TOutputDto>(entity);
+            return _mapper.Map<TOutputDto>(entity);
         }
 
         public virtual async Task<T> InsertAsync(TInputDto entityInsertDto)
         {
-            var entity = _dataMapper.Map<T>(entityInsertDto);
+            var entity = _mapper.Map<T>(entityInsertDto);
             _unitOfWork.Repository.Create(entity);
             await _unitOfWork.SaveChangesAsync();
             return entity;
@@ -72,7 +73,7 @@ namespace DEBO.Core.ApplicationService.BaseService
             if (foundEntity == null)
                 throw new EntityNotFoundException();
 
-            foundEntity = _dataMapper.Map<T>(entityUpdateDto);
+            foundEntity = _mapper.Map<T>(entityUpdateDto);
             foundEntity.Id = id;
             foundEntity.ModifyDate = DateTime.Now;
 

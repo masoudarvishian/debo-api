@@ -3,7 +3,6 @@ using DEBO.API.Extensions;
 using DEBO.Core.DomainService;
 using DEBO.Infrastructure.Data;
 using DEBO.Infrastructure.Data.Repositories;
-using DEBO.Infrastructure.Libraries.AutoMapperLib;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -58,7 +57,7 @@ namespace DEBO.API
             var config = new AutoMapper.MapperConfiguration(conf =>
             {
                 var allProfiles =
-                    (from t in typeof(DataMapper).Assembly.GetTypes()
+                    (from t in typeof(IBaseService<,,,,>).Assembly.GetTypes()
                         where t.IsSubclassOf(typeof(Profile))
                         select (Profile) Activator.CreateInstance(t)).ToList();
 
@@ -113,7 +112,6 @@ namespace DEBO.API
 
             #region Dependency Injection Config
 
-            services.AddSingleton<IDataMapper, DataMapper>();
             services.AddScoped(typeof(IGenericRepository<>),
                 typeof(GenericRepository<>));
             services.AddScoped(typeof(IUnitOfWork<>),
