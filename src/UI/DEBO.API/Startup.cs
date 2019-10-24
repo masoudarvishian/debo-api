@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using DEBO.API.Hubs;
 using DEBO.Core.ApplicationService.BaseService;
 using DEBO.Core.ApplicationService.Category.Validators;
 using FluentValidation.AspNetCore;
@@ -51,6 +52,8 @@ namespace DEBO.API
                     fv.ImplicitlyValidateChildProperties = true;
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSignalR();
 
             #region AutoMapper Config
 
@@ -196,6 +199,12 @@ namespace DEBO.API
 
             app.ConfigureExceptionHandler();
             app.UseAuthentication();
+
+            app.UseSignalR(config =>
+            {
+                config.MapHub<NotificationHub>("/notifications");
+            });
+
             app.UseMvc();
 
             app.UseSwagger();
