@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 
 namespace DEBO.API.Hubs
 {
-    public class NotificationHub : Hub
+    public class NotifyHub : Hub<ITypedHubClient>
     {
         public Task SendMessageToAll(string message)
         {
-            return Clients.All.SendAsync("ReceiveMessage", message);
+            throw new System.NotImplementedException();
         }
     }
 }

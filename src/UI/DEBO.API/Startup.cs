@@ -43,6 +43,8 @@ namespace DEBO.API
                         Configuration.GetConnectionString("DefaultConnection"))
             );
 
+            services.AddCors();
+
             services.AddMvc()
                 .AddFluentValidation(fv =>
                 {
@@ -110,8 +112,6 @@ namespace DEBO.API
             });
 
             #endregion
-
-            services.AddCors();
 
             #region Dependency Injection Config
 
@@ -195,6 +195,8 @@ namespace DEBO.API
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader()
+                .AllowCredentials()
+                .WithOrigins("http://localhost:4200")
             );
 
             app.ConfigureExceptionHandler();
@@ -202,7 +204,7 @@ namespace DEBO.API
 
             app.UseSignalR(config =>
             {
-                config.MapHub<NotificationHub>("/notifications");
+                config.MapHub<NotifyHub>("/notify");
             });
 
             app.UseMvc();
