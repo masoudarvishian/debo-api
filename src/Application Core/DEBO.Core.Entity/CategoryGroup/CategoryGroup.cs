@@ -7,6 +7,6 @@
     {
         public string Title { get; set; }
 
-        public ICollection<CategoryGroupCategory> CategoryGroupCategories { get; set; }
+        public ICollection<CategoryGroupCategory> CategoryLinks { get; set; }
     }
 }

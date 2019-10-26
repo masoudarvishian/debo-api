@@ -17,12 +17,12 @@ namespace DEBO.Infrastructure.Data.EntityConfigs
 
             builder
                 .HasOne(x => x.Category)
-                .WithMany(x => x.CategoryGroupCategories)
+                .WithMany(x => x.CategoryGroupLinks)
                 .HasForeignKey(x => x.CategoryId);
 
             builder
                 .HasOne(x => x.CategoryGroup)
-                .WithMany(x => x.CategoryGroupCategories)
+                .WithMany(x => x.CategoryLinks)
                 .HasForeignKey(x => x.CategoryGroupId);
         }
     }

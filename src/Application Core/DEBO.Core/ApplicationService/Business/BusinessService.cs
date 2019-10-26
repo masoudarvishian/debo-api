@@ -12,7 +12,7 @@ namespace DEBO.Core.ApplicationService.Business
             BusinessOutputDto,
             BusinessUpdateDto>, IBusinessService
     {
-        public BusinessService(IUnitOfWork<Entity.Business.Business> unitOfWork, IMapper dataMapper)
+        public BusinessService(IUnitOfWork unitOfWork, IMapper dataMapper)
             : base(unitOfWork, dataMapper)
         {
         }

@@ -10,7 +10,7 @@ namespace DEBO.Core.ApplicationService.CategoryGroup
             CategoryGroupUpdateDto>,
         ICategoryGroupService
     {
-        public CategoryGroupService(IUnitOfWork<Entity.CategoryGroup.CategoryGroup> unitOfWork,
+        public CategoryGroupService(IUnitOfWork unitOfWork,
             IMapper mapper) : base(unitOfWork,
             mapper)
         {

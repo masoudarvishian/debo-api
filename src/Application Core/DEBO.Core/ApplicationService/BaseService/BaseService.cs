@@ -16,10 +16,10 @@ namespace DEBO.Core.ApplicationService.BaseService
         where TOutputDto : class
         where TUpdateDto : class
     {
-        private readonly IUnitOfWork<T> _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public BaseService(IUnitOfWork<T> unitOfWork,
+        public BaseService(IUnitOfWork unitOfWork,
             IMapper dataMapper)
         {
             _unitOfWork = unitOfWork;
@@ -29,7 +29,7 @@ namespace DEBO.Core.ApplicationService.BaseService
         public IEnumerable<TOutputDto> GetAll()
         {
             var allEntities =
-                _unitOfWork.Repository.FindAll()
+                _unitOfWork.Repository<T>().FindAll()
                     .Where(x => !x.IsDelete);
 
             return
@@ -39,7 +39,7 @@ namespace DEBO.Core.ApplicationService.BaseService
         public virtual TOutputDto GetOne(TKey id)
         {
             var entity =
-                _unitOfWork.Repository
+                _unitOfWork.Repository<T>()
                     .FindByCondition(x =>
                         !x.IsDelete &&
                         x.Id.Equals(id))
@@ -56,7 +56,7 @@ namespace DEBO.Core.ApplicationService.BaseService
         public virtual async Task<T> InsertAsync(TInputDto entityInsertDto)
         {
             var entity = _mapper.Map<T>(entityInsertDto);
-            _unitOfWork.Repository.Create(entity);
+            _unitOfWork.Repository<T>().Create(entity);
             await _unitOfWork.SaveChangesAsync();
             return entity;
         }
@@ -64,7 +64,7 @@ namespace DEBO.Core.ApplicationService.BaseService
         public virtual async Task<T> UpdateAsync(TKey id, TUpdateDto entityUpdateDto)
         {
             var foundEntity =
-                _unitOfWork.Repository
+                _unitOfWork.Repository<T>()
                     .FindByCondition(x =>
                         !x.IsDelete &&
                         x.Id.Equals(id))
@@ -77,7 +77,7 @@ namespace DEBO.Core.ApplicationService.BaseService
             foundEntity.Id = id;
             foundEntity.ModifyDate = DateTime.Now;
 
-            _unitOfWork.Repository.Update(foundEntity);
+            _unitOfWork.Repository<T>().Update(foundEntity);
 
             await _unitOfWork.SaveChangesAsync();
             return foundEntity;
@@ -86,7 +86,7 @@ namespace DEBO.Core.ApplicationService.BaseService
         public virtual async Task DeleteAsync(TKey id)
         {
             var foundEntity =
-                _unitOfWork.Repository
+                _unitOfWork.Repository<T>()
                     .FindByCondition(x =>
                         !x.IsDelete &&
                         x.Id.Equals(id))
@@ -98,7 +98,7 @@ namespace DEBO.Core.ApplicationService.BaseService
             foundEntity.IsDelete = true;
             foundEntity.ModifyDate = DateTime.Now;
 
-            _unitOfWork.Repository.Update(foundEntity);
+            _unitOfWork.Repository<T>().Update(foundEntity);
 
             await _unitOfWork.SaveChangesAsync();
         }
