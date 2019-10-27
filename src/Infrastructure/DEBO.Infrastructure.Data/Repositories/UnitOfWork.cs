@@ -23,6 +23,7 @@ namespace DEBO.Infrastructure.Data.Repositories
 
         public IGenericRepository<T> Repository<T>() where T : class
         {
+<<<<<<< HEAD
             var typeName = typeof(T).Name;
             if (Repositories.ContainsKey(typeName))
             {
@@ -36,6 +37,21 @@ namespace DEBO.Infrastructure.Data.Repositories
 
         public int SaveChanges() => _context.SaveChanges();
 
+=======
+            var type = typeof(T).Name;
+            if (Repositories.ContainsKey(type))
+            {
+                return Repositories[type] as IGenericRepository<T>;
+            }
+
+            IGenericRepository<T> repo = new GenericRepository<T>(_context);
+            Repositories.Add(type, repo);
+            return repo;
+        }
+
+        public int SaveChanges() => _context.SaveChanges();
+
+>>>>>>> 10e51a8ae0193e5053c099131e6805a6503023a0
         public async Task<int> SaveChangesAsync() =>
             await _context.SaveChangesAsync();
     }
