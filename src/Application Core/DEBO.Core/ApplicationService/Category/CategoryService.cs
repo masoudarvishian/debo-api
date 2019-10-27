@@ -8,25 +8,29 @@ using System.Threading.Tasks;
 
 namespace DEBO.Core.ApplicationService.Category
 {
-    using DEBO.Core.CustomExceptions;
+    using CustomExceptions;
     using Entity.Category;
     using Entity.CategoryGroup;
+    using Entity.CategoryGroupCategory;
 
     public class CategoryService :
         BaseService<Category, int, CategoryInputDto, CategoryOutputDto,
-            CategoryUpdateDto>, ICategoryService
+            CategoryUpdateDto>,
+        ICategoryService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public CategoryService(IUnitOfWork unitOfWork,
-            IMapper mapper) : base(unitOfWork, mapper)
+            IMapper mapper) : base(unitOfWork,
+            mapper)
         {
             this._unitOfWork = unitOfWork;
             this._mapper = mapper;
         }
 
-        public override async Task<Category> InsertAsync(CategoryInputDto entityInsertDto)
+        public override async Task<Category> InsertAsync(
+            CategoryInputDto entityInsertDto)
         {
             var category = _mapper.Map<Category>(entityInsertDto);
 
@@ -39,16 +43,18 @@ namespace DEBO.Core.ApplicationService.Category
                 throw new EntityNotFoundException("categoryGroup Not Found!");
             }
 
-            category.CategoryGroupLinks = new List<Entity.CategoryGroupCategory.CategoryGroupCategory>
-            {
-                new Entity.CategoryGroupCategory.CategoryGroupCategory
+            category.CategoryGroupLinks =
+                new List<CategoryGroupCategory>
                 {
-                    Category = category,
-                    CategoryGroup = categoryGroup
-                }
-            };
+                    new CategoryGroupCategory
+                    {
+                        Category = category,
+                        CategoryGroup = categoryGroup
+                    }
+                };
 
-            _unitOfWork.Repository<Category>().Create(category);
+            _unitOfWork.Repository<Category>()
+                .Create(category);
             await _unitOfWork.SaveChangesAsync();
             return category;
         }

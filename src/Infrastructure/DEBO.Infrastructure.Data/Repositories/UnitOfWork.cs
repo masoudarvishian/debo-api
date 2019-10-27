@@ -1,5 +1,4 @@
 ﻿using DEBO.Core.DomainService;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,13 +6,14 @@ namespace DEBO.Infrastructure.Data.Repositories
 {
     public sealed class UnitOfWork : IUnitOfWork
     {
-        private Dictionary<string, object> _repositories;
+        private Dictionary<string, object> Repositories { get; set; }
 
         private readonly ApplicationContext _context;
 
         public UnitOfWork(ApplicationContext context)
         {
             _context = context;
+            Repositories = new Dictionary<string, object>();
         }
 
         public void Dispose()
@@ -21,31 +21,22 @@ namespace DEBO.Infrastructure.Data.Repositories
             _context.Dispose();
         }
 
-        public int SaveChanges() =>
-            _context.SaveChanges();
+        public IGenericRepository<T> Repository<T>() where T : class
+        {
+            var typeName = typeof(T).Name;
+            if (Repositories.ContainsKey(typeName))
+            {
+                return Repositories[typeName] as IGenericRepository<T>;
+            }
+
+            IGenericRepository<T> repo = new GenericRepository<T>(_context);
+            Repositories.Add(typeName, repo);
+            return repo;
+        }
+
+        public int SaveChanges() => _context.SaveChanges();
 
         public async Task<int> SaveChangesAsync() =>
             await _context.SaveChangesAsync();
-
-        IGenericRepository<T> IUnitOfWork.Repository<T>()
-        {
-            if (_repositories == null)
-            {
-                _repositories = new Dictionary<string, object>();
-            }
-
-            var type = typeof(T).Name;
-
-            if (!_repositories.ContainsKey(type))
-            {
-                var repositoryType = typeof(IGenericRepository<>);
-                var repositoryInstance = 
-                    Activator
-                    .CreateInstance(repositoryType.MakeGenericType(typeof(T)), _context);
-                _repositories.Add(type, repositoryInstance);
-            }
-
-            return (IGenericRepository<T>)_repositories[type];
-        }
     }
 }
