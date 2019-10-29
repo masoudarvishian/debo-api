@@ -1,5 +1,6 @@
 ﻿namespace DEBO.Core.Entity.CategoryGroup
 {
+    using System;
     using System.Collections.Generic;
     using CategoryGroupCategory;
 
@@ -7,6 +8,6 @@
     {
         public string Title { get; set; }
 
-        public ICollection<CategoryGroupCategory> CategoryLinks { get; set; }
+        public List<CategoryGroupCategory> CategoryLinks { get; set; } = new List<CategoryGroupCategory>();
     }
 }

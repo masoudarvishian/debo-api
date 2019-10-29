@@ -12,6 +12,7 @@ namespace DEBO.Core.ApplicationService.Category
     using Entity.Category;
     using Entity.CategoryGroup;
     using Entity.CategoryGroupCategory;
+    using System;
 
     public class CategoryService :
         BaseService<Category, int, CategoryInputDto, CategoryOutputDto,
@@ -43,18 +44,14 @@ namespace DEBO.Core.ApplicationService.Category
                 throw new EntityNotFoundException("categoryGroup Not Found!");
             }
 
-            category.CategoryGroupLinks =
-                new List<CategoryGroupCategory>
-                {
-                    new CategoryGroupCategory
-                    {
-                        Category = category,
-                        CategoryGroup = categoryGroup
-                    }
-                };
+            category.CategoryGroupLinks.Add(new CategoryGroupCategory
+            {
+                CategoryGroupId = categoryGroup.Id
+            });
 
             _unitOfWork.Repository<Category>()
                 .Create(category);
+
             await _unitOfWork.SaveChangesAsync();
             return category;
         }

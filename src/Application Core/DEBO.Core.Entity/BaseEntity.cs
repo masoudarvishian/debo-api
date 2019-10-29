@@ -12,6 +12,7 @@ namespace DEBO.Core.Entity
         {
             CreateDate = DateTime.Now;
             ModifyDate = DateTime.Now;
+            IsDelete = false;
         }
 
         public TKey Id { get; set; }
